@@ -12,8 +12,12 @@ class Contact(models.Model):
     phone_number = models.CharField(max_length=9, unique=True)
     email = models.EmailField(unique=True)
     city = models.CharField(max_length=40)
-    status = models.ForeignKey(ContactStatusChoices, on_delete=models.PROTECT)
     added_date = models.DateTimeField(auto_now_add=True)
+    status = models.ForeignKey(
+        ContactStatusChoices,
+        on_delete=models.PROTECT,
+        related_name='status',
+    )
 
     class Meta:
         ordering = ['-added_date']

@@ -2,7 +2,10 @@ from rest_framework import serializers
 from .models import Contact, ContactStatusChoices
 
 class ContactSerializer(serializers.ModelSerializer):
-    status = serializers.SlugRelatedField(slug_field='current_status', queryset=ContactStatusChoices.objects.all())
+    status = serializers.SlugRelatedField(
+        slug_field='current_status',
+        queryset=ContactStatusChoices.objects.all()
+    )
 
     class Meta:
         model = Contact
