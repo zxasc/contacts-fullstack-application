@@ -55,7 +55,8 @@ export default function Form(props) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),});
+                body: JSON.stringify(formData),
+            });
 
             if (!response.ok) {
                 const error = await response.json();
@@ -64,6 +65,8 @@ export default function Form(props) {
             const result = await response.json();
             if (props.isEditing) {
                 props.updateContact(result);
+            } else {
+                props.addContact(result);
             }
         } catch (e) {
             throw new Error(e);
@@ -76,88 +79,84 @@ export default function Form(props) {
     }
 
     return (
-        <section>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>
-                        Name:
-                        <input
-                            type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleFieldChange}
-                            onBlur={() => validateField("name")}
-                        />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        Surname:
-                        <input
-                            type="text"
-                            name="surname"
-                            value={formData.surname}
-                            onChange={handleFieldChange}
-                            onBlur={() => validateField("surname")}
-                        />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        Phone number:
-                        <input
-                            type="text"
-                            name="phone_number"
-                            value={formData.phone_number}
-                            onChange={handleFieldChange}
-                            onBlur={() => validateField("phone_number")}
-                        />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        Email:
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleFieldChange}
-                            onBlur={() => validateField("email")}
-                        />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        City:
-                        <input
-                            type="text"
-                            name="city"
-                            value={formData.city}
-                            onChange={handleFieldChange}
-                            onBlur={() => validateField("city")}
-                        />
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        Status:
-                        <input
-                            type="text"
-                            name="status"
-                            value={formData.status}
-                            onChange={handleFieldChange}
-                            onBlur={() => validateField("status")}
-                        />
-                    </label>
-                </div>
-                <button
-                    onClick={handleSubmit}
-                    type="submit"
-                    disabled={isLoading}
-                >
-                    Submit
-                </button>
-            </form>
-        </section>
+        <form className="contacts-row" onSubmit={handleSubmit}>
+            <div>
+                <label>
+                    Name:
+                    <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleFieldChange}
+                        onBlur={() => validateField("name")}
+                    />
+                </label>
+                <label>
+                    Surname:
+                    <input
+                        type="text"
+                        name="surname"
+                        value={formData.surname}
+                        onChange={handleFieldChange}
+                        onBlur={() => validateField("surname")}
+                    />
+                </label>
+            </div>
+            <div>
+                <label>
+                    Phone number:
+                    <input
+                        type="text"
+                        name="phone_number"
+                        value={formData.phone_number}
+                        onChange={handleFieldChange}
+                        onBlur={() => validateField("phone_number")}
+                    />
+                </label>
+            </div>
+            <div>
+                <label>
+                    Email:
+                    <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleFieldChange}
+                        onBlur={() => validateField("email")}
+                    />
+                </label>
+            </div>
+            <div>
+                <label>
+                    City:
+                    <input
+                        type="text"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleFieldChange}
+                        onBlur={() => validateField("city")}
+                    />
+                </label>
+            </div>
+            <div>
+                <label>
+                    Status:
+                    <input
+                        type="text"
+                        name="status"
+                        value={formData.status}
+                        onChange={handleFieldChange}
+                        onBlur={() => validateField("status")}
+                    />
+                </label>
+            </div>
+            <button
+                onClick={handleSubmit}
+                type="submit"
+                disabled={isLoading}
+            >
+                Submit
+            </button>
+        </form>
     )
 }

@@ -26,31 +26,51 @@ export default function Contact(props) {
             const weather_data = await response.json();
             return weather_data;
         } catch (e) {
-            fetchWeather(city);
+            //fetchWeather(city);
             throw Error(e);
         }
+    }
+
+    const parseDate = (date) => {
+        const dateArr = date.slice(0,10).split('-');
+        const dateStr = dateArr.reverse().join('.');
+        return dateStr;
     }
 
     return (
         <>
             { !isEditing &&
-                <div className="contact">
-                    <h4>{contactData.name} {contactData.surname}</h4>
-                    <p>{contactData.phone_number}</p>
-                    <p>{contactData.email}</p>
-                    <p>{contactData.city}</p>
-                    <p>{weatherData.temperature}°C | {weatherCodes.get(weatherData.weathercode)}</p>
-                    <p>{contactData.added_date}</p>
-                    <button
-                        onClick={() => handleContactEdit(props.id)}
-                    >
-                        Edit contact
-                    </button>
-                    <button
-                        onClick={() => fetchWeather(props.city)}
-                    >
-                        Delete contact
-                    </button>
+                <div className="contacts-row">
+                    <div className="contacts-name">
+                        <h4 className="">{contactData.name} {contactData.surname}</h4>
+                        <p className="">{parseDate(contactData.added_date)}</p>
+                    </div>
+                    <div>
+                        <p className="">{contactData.phone_number}</p>
+                    </div>
+                    <div>
+                        <p className="">{contactData.email}</p>
+                    </div>
+                    <div>
+                        <p className="">{contactData.city} | {weatherData.temperature}°C | {weatherCodes.get(weatherData.weathercode)}</p>
+                    </div>
+                    <div>
+                        <p>Some Status</p>
+                    </div>
+                    <div>
+                        <button
+                            className="button"
+                            onClick={() => handleContactEdit(props.id)}
+                        >
+                            Edit contact
+                        </button>
+                        <button
+                            className="button"
+                            onClick={() => fetchWeather(props.city)}
+                        >
+                            Delete contact
+                        </button>
+                    </div>
                 </div>
             }
             {isEditing &&
