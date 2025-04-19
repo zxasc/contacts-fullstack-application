@@ -12,16 +12,9 @@ const contactSchema = yup.object().shape({
 })
 
 export default function Form(props) {
-    const [success, setSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        surname: "",
-        phone_number: "",
-        email: "",
-        city: "",
-        added_date: "",
-    });
+    const [formData, setFormData] = useState(props.contact);
+
 
     const handleFieldChange = (e) => {
         const { name, value } = e.target;
@@ -45,28 +38,39 @@ export default function Form(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await contactSchema.validate(formData, { abortEarly: false });
-            // TODO: Add duplicate detection
-            // TODO: Make the code reusable for edits
-            const url = 'http://localhost:8000/api/contacts';
-            const response = await fetch(url, {
-                method: 'POST',
+            // await contactSchema.validate(formData, { abortEarly: false });
+            // TODO: Add duplicate detection and validation
+            let url;
+            let method;
+            let response;
+            if (props.isEditing) {
+                url = `http://localhost:8000/api/contacts/${props.contact.id}`;
+                method = 'PUT';
+            } else {
+                url = 'http://localhost:8000/api/contacts/';
+                method = 'POST';
+            }
+            response = await fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
-            });
+                body: JSON.stringify(formData),});
 
             if (!response.ok) {
                 const error = await response.json();
                 throw new Error(error.detail);
             };
             const result = await response.json();
-            console.log(result);
-            setSuccess(true);
+            if (props.isEditing) {
+                props.updateContact(result);
+            }
         } catch (e) {
             throw new Error(e);
         } finally {
+            if (props.isEditing) {
+                props.handleContactEdit();
+            }
             setIsLoading(false);
         };
     }
@@ -94,7 +98,55 @@ export default function Form(props) {
                             name="surname"
                             value={formData.surname}
                             onChange={handleFieldChange}
-                            onBlur={() => validateField("name")}
+                            onBlur={() => validateField("surname")}
+                        />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Phone number:
+                        <input
+                            type="text"
+                            name="phone_number"
+                            value={formData.phone_number}
+                            onChange={handleFieldChange}
+                            onBlur={() => validateField("phone_number")}
+                        />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Email:
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleFieldChange}
+                            onBlur={() => validateField("email")}
+                        />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        City:
+                        <input
+                            type="text"
+                            name="city"
+                            value={formData.city}
+                            onChange={handleFieldChange}
+                            onBlur={() => validateField("city")}
+                        />
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        Status:
+                        <input
+                            type="text"
+                            name="status"
+                            value={formData.status}
+                            onChange={handleFieldChange}
+                            onBlur={() => validateField("status")}
                         />
                     </label>
                 </div>
@@ -105,7 +157,6 @@ export default function Form(props) {
                 >
                     Submit
                 </button>
-
             </form>
         </section>
     )

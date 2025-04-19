@@ -1,47 +1,58 @@
 import { render } from 'preact';
 
-import preactLogo from './assets/preact.svg';
 import './style.css';
-import Card from './components/Card.jsx';
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import Form from "./components/Form.jsx";
+import Contact from './components/Contact.jsx';
 
 export function App() {
-	const [counter, setCounter] = useState(0);
-	function clickHandler() {
-		console.log('clicked');
-		setCounter(counter + 1);
-	}
+	const [isLoading, setIsLoading] = useState(true);
+	const [contactsList, setContactsList] = useState([])
+	useEffect(() => {
+		fetchContacts().then((contacts) => setContactsList(contacts));
+		setIsLoading(!isLoading);
+	}, []);
 
-	function fetchContacts() {
-		fetch('http://localhost:8000/api/contacts')
-			.then(res => res.json())
-			.then(json => console.log(json))
+	const fetchContacts = async () => {
+		setIsLoading(true);
+		try {
+			const response = await fetch('http://localhost:8000/api/contacts');
+			if (!response.ok) {
+				throw new Error('Could not fetch contacts.');
+			}
+			const contacts = await response.json();
+			console.log("Contacts fetched!");
+			console.log(contacts);
+			return contacts;
+		} catch (e) {
+			throw Error(e);
+		}
 	}
 
 	return (
-		<div>
-			<Card
-				number={counter}
-				onClick={clickHandler}
-			/>
-			<Card
-				number='just fetching some api'
-				onClick={fetchContacts}
-			/>
+		<main>
 			<section>
-				<Form />
+				{!isLoading && contactsList.map((contact) => (
+					<Contact
+						contact={contact}
+						key={contact.id}
+					/>
+				))}
 			</section>
-		</div>
-	);
-}
-
-function Resource(props) {
-	return (
-		<a href={props.href} target="_blank" class="resource">
-			<h2>{props.title}</h2>
-			<p>{props.description}</p>
-		</a>
+			<section>
+				<Form
+					contact={{
+						name: "",
+						surname: "",
+						phone_number: "",
+						email: "",
+						city: "",
+						added_date: "",
+					}}
+					isEditing={false}
+				/>
+			</section>
+		</main>
 	);
 }
 
