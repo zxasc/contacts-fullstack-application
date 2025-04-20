@@ -53,47 +53,51 @@ export function App() {
 
 	return (
 		<>
-			<main className="contacts-app">
-				<h1>Contacts App</h1>
-				<select
-					value={sortType}
-					onChange={(e) => setSortType(e.target.value)}
-				>
-					<option value="bySurnameAsc">Surname (A → Z)</option>
-					<option value="bySurnameDesc">Surname (Z → A)</option>
-					<option value="byDateDesc">Date added (Newest First)</option>
-					<option value="byDateAsc">Date added (Oldest First)</option>
-				</select>
-				<section className="contacts-table">
-					<div className="contacts-row">
-						<div><p>Name</p></div>
-						<div><p>Phone number</p></div>
-						<div><p>Email</p></div>
-						<div><p>City | Temp | Weather</p></div>
-						<div><p>Status</p></div>
-						<div><p>Edit</p></div>
-					</div>
-					{!isLoading && sortedContacts.map((contact) => (
-						<Contact
-							contact={contact}
-							key={contact.id}
-						/>
-					))}
-					<Form
-						contact={{
-							name: "",
-							surname: "",
-							phone_number: "",
-							email: "",
-							city: "",
-							status: "",
-							added_date: "",
-						}}
-						isEditing={false}
-						addContact={addContact}
+			<header className="px-6 py-8 bg-eminence-400">
+				<h1 className="text-2xl font-semibold">📩 Kontakty</h1>
+			</header>
+			<section className="
+				grid grid-flow-row justify-items-center grid-cols-1 sm:grid-cols-2
+				lg:grid-cols-3 xl:grid-cols-4 gap-3 w-[95%] mx-auto
+			">
+				<div className="flex flex-row justify-center col-span-full py-2 w-full sticky top-0 bg-eminence-50">
+					<label>
+						Sortowanie:
+						<select
+							defaultValue={"byDateDesc"}
+							value={sortType}
+							onChange={(e) => setSortType(e.target.value)}
+						>
+							<option value="bySurnameAsc">Nazwisko (A → Z)</option>
+							<option value="bySurnameDesc">Nazwisko (Z → A)</option>
+							<option value="byDateDesc">Od najnowszego</option>
+							<option value="byDateAsc">Od najstarszego</option>
+						</select>
+					</label>
+				</div>
+				{!isLoading && sortedContacts.map((contact) => (
+					<Contact
+						contact={contact}
+						key={contact.id}
 					/>
-				</section>
-			</main>
+				))}
+				<Form
+					contact={{
+						name: "",
+						surname: "",
+						phone_number: "",
+						email: "",
+						city: "",
+						status: "",
+						added_date: "",
+					}}
+					isEditing={false}
+					addContact={addContact}
+				/>
+			</section>
+			<footer className="mt-4 px-6 py-4 bg-eminence-200">
+				<p className="text-right text-sm">Made with 💜 by <a className="underline decoration-eminence-950" href="https://github.com/zxasc" target="_blank" rel="noopener noreferrer">Paweł</a></p>
+			</footer>
 		</>
 	);
 }

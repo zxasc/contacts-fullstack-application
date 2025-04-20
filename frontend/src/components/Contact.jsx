@@ -40,35 +40,75 @@ export default function Contact(props) {
     return (
         <>
             { !isEditing &&
-                <div className="contacts-row">
-                    <div className="contacts-name">
-                        <h4 className="">{contactData.name} {contactData.surname}</h4>
-                        <p className="">{parseDate(contactData.added_date)}</p>
+                <div className="card">
+                    <div className="card-header">
+                        <img
+                            className="rounded-full border-1 border-eminence-300"
+                            src="https://placecats.com/neo/100/100"
+                        />
+                        <div>
+                            <h4 className="text-lg/6 font-semibold tracking-tight">{contactData.name} {contactData.surname}</h4>
+                            <div className="ml-0 w-auto card-content">
+                                <img
+                                    className="card-icon"
+                                    src="/mail.svg"
+                                />
+                                <p className="text-wrap wrap-anywhere text-xs">{contactData.email}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
+                    <div className="card-content">
+                        <img
+                            className="card-icon"
+                            src="/phone.svg"
+                        />
                         <p className="">{contactData.phone_number}</p>
                     </div>
-                    <div>
-                        <p className="">{contactData.email}</p>
+                    <div className="card-content">
+                        <img
+                            className="card-icon"
+                            src="/city.svg"
+                        />
+                        <p className="">{contactData.city}</p>
                     </div>
-                    <div>
-                        <p className="">{contactData.city} | {weatherData.temperature}°C | {weatherCodes.get(weatherData.weathercode)}</p>
+                    <div className="card-content">
+                        <img
+                            className="card-icon"
+                            src="/temp.svg"
+                        />
+                        <p className=""> {weatherData.temperature || "--"} °C</p>
+                        <img
+                            className="ml-2 card-icon"
+                            src="/cloud.svg"
+                        />
+                        <p className="">{weatherCodes.get(weatherData.weathercode) || "--"}</p>
                     </div>
-                    <div>
-                        <p>{contactData.status}</p>
+                    <div className="card-content">
+                        <img
+                            className="card-icon"
+                            src="/status.svg"
+                        />
+                        <p>{contactData.status.charAt(0).toUpperCase()+contactData.status.slice(1)}</p>
                     </div>
-                    <div>
+                    <div className="card-content">
+                        <img
+                            className="card-icon"
+                            src="/calendar.svg"
+                        />
+                        <p className="">{parseDate(contactData.added_date)}</p>
+                    </div>
+                    <div className="mt-3 card-content mx-auto">
                         <button
                             className="button"
                             onClick={() => handleContactEdit(props.id)}
                         >
-                            Edit contact
+                            Edytuj kontakt
                         </button>
                         <button
-                            className="button"
+                            className="button danger"
                             onClick={() => fetchWeather(props.city)}
                         >
-                            Delete contact
+                           Usuń kontakt
                         </button>
                     </div>
                 </div>
@@ -77,6 +117,7 @@ export default function Contact(props) {
                 <Form
                     contact={contactData}
                     isEditing={isEditing}
+                    setIsEditing={setIsEditing}
                     statusList={props.statusList}
                     handleContactEdit={handleContactEdit}
                     updateContact={setContactData}

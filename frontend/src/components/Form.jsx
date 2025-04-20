@@ -105,68 +105,96 @@ export default function Form(props) {
     }
 
     return (
-        <form className="contacts-row" onSubmit={handleSubmit}>
-            <div>
+        <form className="card items-center justify-end gap-2 bg-eminence-100" onSubmit={handleSubmit}>
+            <div className="card-content">
+                <h3 className="text-xl font-semibold">{props.isEditing ? "Edytowanie" : "Nowy kontakt"}</h3>
+            </div>
+            <div className="card-content">
                 <label>
-                    Name:
+                    <img
+                        className="card-icon"
+                        src="/id.svg"
+                    />
                     <input
                         type="text"
                         name="name"
+                        placeholder="Imię"
                         value={formData.name}
                         onChange={handleFieldChange}
                         onBlur={() => validateField("name")}
                     />
                 </label>
+            </div>
+            <div className="card-content">
                 <label>
-                    Surname:
+                    <img
+                        className="card-icon"
+                        src="/signature.svg"
+                    />
                     <input
                         type="text"
                         name="surname"
+                        placeholder="Nazwisko"
                         value={formData.surname}
                         onChange={handleFieldChange}
                         onBlur={() => validateField("surname")}
                     />
                 </label>
             </div>
-            <div>
+            <div className="card-content">
                 <label>
-                    Phone number:
-                    <input
-                        type="text"
-                        name="phone_number"
-                        value={formData.phone_number}
-                        onChange={handleFieldChange}
-                        onBlur={() => validateField("phone_number")}
+                    <img
+                        className="card-icon"
+                        src="/mail.svg"
                     />
-                </label>
-            </div>
-            <div>
-                <label>
-                    Email:
                     <input
                         type="email"
                         name="email"
+                        placeholder="Email"
                         value={formData.email}
                         onChange={handleFieldChange}
                         onBlur={() => validateField("email")}
                     />
                 </label>
             </div>
-            <div>
+            <div className="card-content">
                 <label>
-                    City:
+                    <img
+                        className="card-icon"
+                        src="/phone.svg"
+                    />
+                    <input
+                        type="text"
+                        name="phone_number"
+                        placeholder="Numer telefonu"
+                        value={formData.phone_number}
+                        onChange={handleFieldChange}
+                        onBlur={() => validateField("phone_number")}
+                    />
+                </label>
+            </div>
+            <div className="card-content">
+                <label>
+                    <img
+                        className="card-icon"
+                        src="/city.svg"
+                    />
                     <input
                         type="text"
                         name="city"
+                        placeholder="Miasto zamieszkania"
                         value={formData.city}
                         onChange={handleFieldChange}
                         onBlur={() => validateField("city")}
                     />
                 </label>
             </div>
-            <div>
+            <div className="card-content">
                 <label>
-                    Status:
+                    <img
+                        className="card-icon"
+                        src="/status.svg"
+                    />
                     <select
                         name="status"
                         value={formData.status}
@@ -183,13 +211,25 @@ export default function Form(props) {
                     </select>
                 </label>
             </div>
-            <button
-                onClick={handleSubmit}
-                type="submit"
-                disabled={isLoading}
-            >
-                Submit
-            </button>
+            <div className="card-content mx-auto">
+                {props.isEditing && (
+                    <button
+                        className="button danger"
+                        onClick={() => props.setIsEditing(false)}
+                        disabled={isLoading}
+                    >
+                        Przerwij
+                    </button>
+                )}
+                <button
+                    className="button"
+                    onClick={handleSubmit}
+                    type="submit"
+                    disabled={isLoading}
+                >
+                    {props.isEditing ? ("Zatwierdź") : ("Dodaj kontakt")}
+                </button>
+            </div>
         </form>
     )
 }
