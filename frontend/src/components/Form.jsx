@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const contactSchema = yup.object().shape({
     name: yup.string().required(),
@@ -14,7 +14,32 @@ const contactSchema = yup.object().shape({
 export default function Form(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState(props.contact);
+    const [statusList, setStatusList] = useState([])
+    useEffect(() => {
+        const loadStatusOptions = async () => {
+            setIsLoading(true);
+            try {
+                const statusOptions = await fetchStatusOptions();
+                setStatusList(statusOptions);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        loadStatusOptions();
+    }, []);
 
+    const fetchStatusOptions = async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/status-options`);
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            const statusOptions = await response.json();
+            return statusOptions;
+        } catch (e) {
+            throw Error(e);
+        }
+    }
 
     const handleFieldChange = (e) => {
         const { name, value } = e.target;
@@ -61,7 +86,8 @@ export default function Form(props) {
             if (!response.ok) {
                 const error = await response.json();
                 throw new Error(error.detail);
-            };
+            }
+
             const result = await response.json();
             if (props.isEditing) {
                 props.updateContact(result);
@@ -141,13 +167,20 @@ export default function Form(props) {
             <div>
                 <label>
                     Status:
-                    <input
-                        type="text"
+                    <select
                         name="status"
                         value={formData.status}
                         onChange={handleFieldChange}
-                        onBlur={() => validateField("status")}
-                    />
+                    >
+                        {statusList.map((status, i) => (
+                            <option
+                                key={i}
+                                value={status}
+                            >
+                                {status.charAt(0).toUpperCase()+status.slice(1)}
+                            </option>
+                        ))}
+                    </select>
                 </label>
             </div>
             <button

@@ -38,11 +38,9 @@ export function App() {
 		try {
 			const response = await fetch('http://localhost:8000/api/contacts');
 			if (!response.ok) {
-				throw new Error('Could not fetch contacts.');
+				throw Error(response.statusText);
 			}
 			const contacts = await response.json();
-			console.log("Contacts fetched!");
-			console.log(contacts);
 			return contacts;
 		} catch (e) {
 			throw Error(e);
@@ -88,6 +86,7 @@ export function App() {
 							phone_number: "",
 							email: "",
 							city: "",
+							status: "",
 							added_date: "",
 						}}
 						isEditing={false}

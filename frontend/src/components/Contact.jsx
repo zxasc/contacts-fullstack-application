@@ -55,7 +55,7 @@ export default function Contact(props) {
                         <p className="">{contactData.city} | {weatherData.temperature}°C | {weatherCodes.get(weatherData.weathercode)}</p>
                     </div>
                     <div>
-                        <p>Some Status</p>
+                        <p>{contactData.status}</p>
                     </div>
                     <div>
                         <button
@@ -75,8 +75,9 @@ export default function Contact(props) {
             }
             {isEditing &&
                 <Form
-                    isEditing={isEditing}
                     contact={contactData}
+                    isEditing={isEditing}
+                    statusList={props.statusList}
                     handleContactEdit={handleContactEdit}
                     updateContact={setContactData}
                 />
