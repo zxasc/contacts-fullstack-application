@@ -1,15 +1,6 @@
-import * as yup from 'yup';
-import {useEffect, useState} from "react";
-
-const contactSchema = yup.object().shape({
-    name: yup.string().required(),
-    surname: yup.string().required(),
-    phone_number: yup.string().required(),
-    email: yup.string().email().required(),
-    city: yup.string().required(),
-    state: yup.string().required(),
-    added_date: yup.date().required().default(() => new Date()),
-})
+import { useEffect, useState } from "react";
+import { contactSchema } from "../utils/contactSchema.js";
+import CardContent from "./CardContent.jsx";
 
 export default function Form(props) {
     const [isLoading, setIsLoading] = useState(false);
@@ -90,6 +81,7 @@ export default function Form(props) {
             }
 
             const result = await response.json();
+            console.log(result);
             if (props.isEditing) {
                 props.updateContact(result);
             } else {
@@ -110,6 +102,15 @@ export default function Form(props) {
             <div className="card-content">
                 <h3 className="text-xl font-semibold">{props.isEditing ? "Edytowanie" : "Nowy kontakt"}</h3>
             </div>
+            {/*<CardContent*/}
+            {/*    type="form"*/}
+            {/*    formData={formData}*/}
+            {/*    setFormData={setFormData}*/}
+            {/*    icon="id"*/}
+            {/*    input="text"*/}
+            {/*    name="name"*/}
+            {/*    placeholder="Imię"*/}
+            {/*/>*/}
             <div className="card-content">
                 <label>
                     <img
@@ -119,7 +120,7 @@ export default function Form(props) {
                     <input
                         type="text"
                         name="name"
-                        placeholder="Imię"
+                        placeholder="imie"
                         value={formData.name}
                         onChange={handleFieldChange}
                         onBlur={() => validateField("name")}
@@ -217,7 +218,6 @@ export default function Form(props) {
                     <button
                         className="button danger"
                         onClick={() => props.setIsEditing(false)}
-                        disabled={isLoading}
                     >
                         Przerwij
                     </button>

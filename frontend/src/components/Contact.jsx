@@ -27,7 +27,7 @@ export default function Contact(props) {
             const weather_data = await response.json();
             return weather_data;
         } catch (e) {
-            fetchWeather(city);
+            //fetchWeather(city);
             console.error(e);
         }
     }

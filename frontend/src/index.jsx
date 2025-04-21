@@ -6,15 +6,17 @@ import Form from "./components/Form.jsx";
 import Contact from './components/Contact.jsx';
 
 export function App() {
-	const [sortType, setSortType] = useState('surname')
+	const [sortType, setSortType] = useState('byDateDesc')
 	const [isLoading, setIsLoading] = useState(true);
 	const [contactsList, setContactsList] = useState([])
+	const [sortedContactsList, setSortedContactsList] = useState([])
 	useEffect(() => {
 		const loadContacts = async () => {
 			setIsLoading(true);
 			try {
 				const contacts = await fetchContacts();
 				setContactsList(contacts);
+				setSortedContactsList(contacts.sort(sortContacts[sortType]));
 			} finally {
 				setIsLoading(false);
 			}
@@ -28,10 +30,6 @@ export function App() {
 	  byDateAsc: (a, b) => new Date(a.added_date) - new Date(b.added_date),
 	  byDateDesc: (a, b) => new Date(b.added_date) - new Date(a.added_date),
 	}
-
-	const sortedContacts = useMemo(() => {
-		return [...contactsList].sort(sortContacts[sortType]);
-	}, [contactsList, sortType]);
 
 	const fetchContacts = async () => {
 		setIsLoading(true);
@@ -53,7 +51,7 @@ export function App() {
 	}
 
 	return (
-		<>
+		<div>
 			<header className="px-6 py-8 bg-eminence-400">
 				<h1 className="text-2xl font-semibold">📩 Kontakty</h1>
 			</header>
@@ -76,7 +74,7 @@ export function App() {
 						</select>
 					</label>
 				</div>
-				{!isLoading && sortedContacts.map((contact) => (
+				{!isLoading && sortedContactsList.map((contact) => (
 					<Contact
 						contact={contact}
 						key={contact.id}
@@ -99,7 +97,7 @@ export function App() {
 			<footer className="mt-4 px-6 py-4 bg-eminence-200">
 				<p className="text-right text-sm">Made with 💜 by <a className="underline decoration-eminence-950" href="https://github.com/zxasc" target="_blank" rel="noopener noreferrer">Paweł</a></p>
 			</footer>
-		</>
+		</div>
 	);
 }
 
