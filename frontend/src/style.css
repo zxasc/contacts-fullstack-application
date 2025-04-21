@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme {
     --color-eminence-50: #faf7fd;
@@ -16,9 +16,10 @@
 
 @layer base {
     body {
-        @apply bg-zinc-50 text-zinc-950
+        @apply bg-zinc-50 text-zinc-950;
     }
-    input, select {
+    input,
+    select {
         @apply px-2 py-0.5 border-1 border-zinc-400 rounded-md;
     }
     label {
@@ -49,64 +50,3 @@
         @apply bg-red-300;
     }
 }
-/*:root {*/
-/*	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;*/
-/*	line-height: 1.5;*/
-/*	font-weight: 400;*/
-
-/*	color: #222;*/
-/*	background-color: #ffffff;*/
-
-/*	font-synthesis: none;*/
-/*	text-rendering: optimizeLegibility;*/
-/*	-webkit-font-smoothing: antialiased;*/
-/*	-webkit-text-size-adjust: 100%;*/
-/*}*/
-
-/** {*/
-/*    box-sizing: border-box;*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*}*/
-
-/*.contacts-app {*/
-/*    width: 90%;*/
-/*    margin: 0 auto;*/
-/*}*/
-
-/*.contacts-table {*/
-/*    display: grid;*/
-/*    grid-template-columns: repeat(6, 1fr);*/
-/*    gap: 1px;*/
-/*}*/
-
-/*.contacts-row {*/
-/*    font-size: 12px;*/
-/*    display:contents;*/
-/*}*/
-
-/*.contacts-row:first-of-type {*/
-/*    font-weight: bold;*/
-/*}*/
-
-/*.contacts-row div {*/
-/*    background: #fff;*/
-/*    min-height: 48px;*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*}*/
-
-/*.contacts-row div:first-of-type {*/
-/*    flex-direction: column;*/
-/*    align-items: flex-start;*/
-/*}*/
-
-/*input {*/
-/*    min-width: 0;*/
-/*}*/
-
-/*body {*/
-/*	margin: 0;*/
-/*    padding: 0;*/
-/*    width: 100%;*/
-/*}*/
