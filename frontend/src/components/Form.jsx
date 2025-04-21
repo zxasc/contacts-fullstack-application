@@ -32,12 +32,13 @@ export default function Form(props) {
         try {
             const response = await fetch(`http://localhost:8000/api/status-options`);
             if (!response.ok) {
-                throw Error(response.statusText);
+                const error = await response.json();
+                console.error(error);
             }
             const statusOptions = await response.json();
             return statusOptions;
         } catch (e) {
-            throw Error(e);
+            console.error("Error occurred: ", e);
         }
     }
 
@@ -56,7 +57,7 @@ export default function Form(props) {
         try {
             await contactSchema.validateAt(field, {[field]: value});
         } catch (e) {
-            console.error(e);
+            console.error("Error occurred: ", e);
         }
     }
 
@@ -85,7 +86,7 @@ export default function Form(props) {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.detail);
+                console.error("Error occurred: ", error);
             }
 
             const result = await response.json();
@@ -95,13 +96,13 @@ export default function Form(props) {
                 props.addContact(result);
             }
         } catch (e) {
-            throw new Error(e);
+            console.error("Error occurred: ", e);
         } finally {
             if (props.isEditing) {
                 props.handleContactEdit();
             }
             setIsLoading(false);
-        };
+        }
     }
 
     return (

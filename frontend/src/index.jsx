@@ -38,12 +38,13 @@ export function App() {
 		try {
 			const response = await fetch('http://localhost:8000/api/contacts');
 			if (!response.ok) {
-				throw Error(response.statusText);
+				const error = await response.json();
+				console.error(error);
 			}
 			const contacts = await response.json();
 			return contacts;
 		} catch (e) {
-			throw Error(e);
+			console.error("Error occurred: ", e);
 		}
 	}
 

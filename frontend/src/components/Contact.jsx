@@ -21,13 +21,14 @@ export default function Contact(props) {
         try {
             const response = await fetch(`http://localhost:8000/weather/${city}`, {});
             if (!response.ok) {
-                throw new Error('Could not fetch weather');
+                const error = await response.json();
+                console.error("Error occurred: ", error);
             }
             const weather_data = await response.json();
             return weather_data;
         } catch (e) {
-            //fetchWeather(city);
-            throw Error(e);
+            fetchWeather(city);
+            console.error(e);
         }
     }
 
