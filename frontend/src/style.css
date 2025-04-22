@@ -32,7 +32,7 @@
         @apply flex flex-col gap-1 py-7 px-3 items-start justify-center w-full min-w-[290px] max-w-[390px] text-sm rounded-md border-1 border-eminence-300 bg-zinc-50 shadow-md;
     }
     .card-header {
-        @apply flex flex-row gap-4 mb-3 pr-3 w-full items-center justify-start;
+        @apply flex flex-col md:flex-row gap-4 mb-3 pr-3 w-full items-center justify-start;
     }
     .card-content {
         @apply flex flex-row gap-1 items-center justify-start ml-2;
@@ -41,7 +41,7 @@
         @apply w-5 h-4;
     }
     .button {
-        @apply flex items-center justify-center px-4 py-1 rounded-md bg-eminence-200 text-eminence-950 ease-in duration-110 cursor-pointer;
+        @apply flex items-center justify-center px-6 py-3 md:px-4 md:py-1 rounded-md bg-eminence-200 text-eminence-950 ease-in duration-110 cursor-pointer;
     }
     .button:hover {
         @apply bg-eminence-300;

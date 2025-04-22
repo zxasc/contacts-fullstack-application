@@ -76,7 +76,7 @@ export default function Contact(props) {
               src="https://placecats.com/neo/100/100"
             />
             <div>
-              <h4 className="text-lg/6 font-semibold tracking-tight">
+              <h4 className="text-lg/6 text-center md:text-left font-semibold tracking-tight">
                 {contactData.name} {contactData.surname}
               </h4>
               <div className="ml-0 w-auto card-content">
