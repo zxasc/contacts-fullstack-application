@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { transformYupErrorsIntoObject } from "../utils/TransformYupErrorIntoObject.js";
 import { useEffect, useState } from "react";
 import { contactSchema } from "../utils/contactSchema.js";
 import FormField from "./FormField.jsx";
@@ -6,7 +7,6 @@ import { API_URL } from "../utils/api.js";
 
 export default function Form(props) {
   const [errors, setErrors] = useState({});
-  const [touchedFields, setTouchedFields] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   // Set default state for `status`, if it hasn't been provided
   const [formData, setFormData] = useState({
@@ -46,34 +46,21 @@ export default function Form(props) {
       const fieldSchema = yup.object().shape({
         [field]: contactSchema.fields[field],
       });
-      await fieldSchema.validate({ [field]: value }, { abortEarly: false });
+      await fieldSchema.validate(
+        { [field]: value },
+        { abortEarly: false, strict: false },
+      );
       setErrors((prevState) => ({ ...prevState, [field]: "" }));
     } catch (err) {
-      if (err.inner && err.inner.length) {
-        const fieldError = err.inner.find((e) => e.path === field);
-        if (fieldError) {
-          setErrors((prev) => ({
-            ...prev,
-            [field]: fieldError.message,
-          }));
-        }
-      }
+      const validationErrors = transformYupErrorsIntoObject(err);
+      setErrors((prev) => ({ ...prev, [field]: validationErrors[field] }));
     }
   };
 
   const handleFieldChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
-    //setErrors((prev) => ({ ...prev, [name]: "" }));
-
-    if (touchedFields[name]) {
-      validateField(name, value);
-    }
-  };
-
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    setTouchedFields((prevState) => ({ ...prevState, [name]: true }));
+    validateField(name, value);
   };
 
   const handleSubmit = async (e) => {
@@ -121,16 +108,9 @@ export default function Form(props) {
           status: "nowy",
         });
       }
-    } catch (e) {
-      console.error("Error occurred: ", e);
-      if (e.name === "ValidationError") {
-        const errors = e.inner.reduce((acc, curr) => ({
-          ...acc,
-          [curr.path]: curr.message,
-        }));
-        setErrors({ errors });
-        console.error("Validation errors:", errors);
-      }
+    } catch (err) {
+      const validationErrors = transformYupErrorsIntoObject(err);
+      setErrors((prev) => ({ ...prev, validationErrors }));
     } finally {
       if (props.isEditing) {
         props.handleContactEdit();
@@ -156,9 +136,7 @@ export default function Form(props) {
         placeholder="Imie"
         value={formData.name}
         onChange={handleFieldChange}
-        onBlur={handleBlur}
         error={errors.name}
-        touched={touchedFields.name}
       />
       <FormField
         icon="/signature.svg"
@@ -167,9 +145,7 @@ export default function Form(props) {
         placeholder="Nazwisko"
         value={formData.surname}
         onChange={handleFieldChange}
-        onBlur={handleBlur}
         error={errors.surname}
-        touched={touchedFields.surname}
       />
       <FormField
         icon="/mail.svg"
@@ -178,9 +154,7 @@ export default function Form(props) {
         placeholder="Email"
         value={formData.email}
         onChange={handleFieldChange}
-        onBlur={handleBlur}
         error={errors.email}
-        touched={touchedFields.email}
       />
       <FormField
         icon="/phone.svg"
@@ -189,9 +163,7 @@ export default function Form(props) {
         placeholder="Numer telefonu"
         value={formData.phone_number}
         onChange={handleFieldChange}
-        onBlur={handleBlur}
         error={errors.phone_number}
-        touched={touchedFields.phone_number}
       />
       <FormField
         icon="/city.svg"
@@ -200,24 +172,24 @@ export default function Form(props) {
         placeholder="Miasto zamieszkania"
         value={formData.city}
         onChange={handleFieldChange}
-        onBlur={handleBlur}
         error={errors.city}
-        touched={touchedFields.city}
       />
       <div className="card-content">
         <label>
-          <img className="card-icon" src="/status.svg" />
-          <select
-            name="status"
-            value={formData.status}
-            onChange={handleFieldChange}
-          >
-            {statusList.map((status, i) => (
-              <option key={i} value={status}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </option>
-            ))}
-          </select>
+          <div className="flex flex-row gap-2 items-center">
+            <img className="card-icon" src="/status.svg" />
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleFieldChange}
+            >
+              {statusList.map((status, i) => (
+                <option key={i} value={status}>
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </option>
+              ))}
+            </select>
+          </div>
         </label>
       </div>
       <div className="card-content mx-auto">
@@ -236,14 +208,6 @@ export default function Form(props) {
           disabled={isLoading}
         >
           {props.isEditing ? "Zatwierdź" : "Dodaj kontakt"}
-        </button>
-        <button
-          onClick={() => {
-            console.log(errors);
-            console.log(touchedFields);
-          }}
-        >
-          look who it is if its not the loggin madafaking button!
         </button>
       </div>
     </form>

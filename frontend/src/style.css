@@ -20,10 +20,10 @@
     }
     input,
     select {
-        @apply px-2 py-0.5 border-1 border-zinc-400 rounded-md;
+        @apply px-2 py-0.5 border-1 border-zinc-400 rounded-md ease-in duration-100;
     }
     label {
-        @apply flex flex-row gap-2 items-center;
+        @apply flex flex-col gap-1 justify-center items-center;
     }
 }
 
@@ -48,5 +48,8 @@
     }
     .danger:hover {
         @apply bg-red-300;
+    }
+    .input-error {
+        @apply bg-red-400 border-red-950 border-1;
     }
 }
