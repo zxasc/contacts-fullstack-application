@@ -1,11 +1,18 @@
+import * as yup from "yup";
 import { useEffect, useState } from "react";
 import { contactSchema } from "../utils/contactSchema.js";
 import FormField from "./FormField.jsx";
 import { API_URL } from "../utils/api.js";
 
 export default function Form(props) {
+  const [errors, setErrors] = useState({});
+  const [touchedFields, setTouchedFields] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState(props.contact);
+  // Set default state for `status`, if it hasn't been provided
+  const [formData, setFormData] = useState({
+    ...props.contact,
+    status: props.contact.status || "nowy",
+  });
   const [statusList, setStatusList] = useState([]);
   useEffect(() => {
     const loadStatusOptions = async () => {
@@ -34,30 +41,46 @@ export default function Form(props) {
     }
   };
 
+  const validateField = async (field, value) => {
+    try {
+      const fieldSchema = yup.object().shape({
+        [field]: contactSchema.fields[field],
+      });
+      await fieldSchema.validate({ [field]: value }, { abortEarly: false });
+      setErrors((prevState) => ({ ...prevState, [field]: "" }));
+    } catch (err) {
+      if (err.inner && err.inner.length) {
+        const fieldError = err.inner.find((e) => e.path === field);
+        if (fieldError) {
+          setErrors((prev) => ({
+            ...prev,
+            [field]: fieldError.message,
+          }));
+        }
+      }
+    }
+  };
+
   const handleFieldChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({ ...prevState, [name]: value }));
+    //setErrors((prev) => ({ ...prev, [name]: "" }));
 
-    const timeoutId = setTimeout(() => {
+    if (touchedFields[name]) {
       validateField(name, value);
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
+    }
   };
 
-  const validateField = async (field, value) => {
-    try {
-      await contactSchema.validateAt(field, { [field]: value });
-    } catch (e) {
-      console.error("Error occurred: ", e);
-    }
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouchedFields((prevState) => ({ ...prevState, [name]: true }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // await contactSchema.validate(formData, { abortEarly: false });
-      // TODO: Add duplicate detection and validation
+      await contactSchema.validate(formData, { abortEarly: false });
+
       let url = `${API_URL}/api/contacts/`;
       let method = "POST";
       if (props.isEditing) {
@@ -78,14 +101,36 @@ export default function Form(props) {
       }
 
       const result = await response.json();
-      console.log(result);
+
       if (props.isEditing) {
         props.updateContact(result);
+        setFormData({
+          name: "",
+          surname: "",
+          email: "",
+          phone_number: "",
+          status: "nowy",
+        });
       } else {
         props.addContact(result);
+        setFormData({
+          name: "",
+          surname: "",
+          email: "",
+          phone_number: "",
+          status: "nowy",
+        });
       }
     } catch (e) {
       console.error("Error occurred: ", e);
+      if (e.name === "ValidationError") {
+        const errors = e.inner.reduce((acc, curr) => ({
+          ...acc,
+          [curr.path]: curr.message,
+        }));
+        setErrors({ errors });
+        console.error("Validation errors:", errors);
+      }
     } finally {
       if (props.isEditing) {
         props.handleContactEdit();
@@ -111,7 +156,9 @@ export default function Form(props) {
         placeholder="Imie"
         value={formData.name}
         onChange={handleFieldChange}
-        onBlur={() => validateField("name")}
+        onBlur={handleBlur}
+        error={errors.name}
+        touched={touchedFields.name}
       />
       <FormField
         icon="/signature.svg"
@@ -120,7 +167,9 @@ export default function Form(props) {
         placeholder="Nazwisko"
         value={formData.surname}
         onChange={handleFieldChange}
-        onBlur={() => validateField("surname")}
+        onBlur={handleBlur}
+        error={errors.surname}
+        touched={touchedFields.surname}
       />
       <FormField
         icon="/mail.svg"
@@ -129,7 +178,9 @@ export default function Form(props) {
         placeholder="Email"
         value={formData.email}
         onChange={handleFieldChange}
-        onBlur={() => validateField("email")}
+        onBlur={handleBlur}
+        error={errors.email}
+        touched={touchedFields.email}
       />
       <FormField
         icon="/phone.svg"
@@ -138,7 +189,9 @@ export default function Form(props) {
         placeholder="Numer telefonu"
         value={formData.phone_number}
         onChange={handleFieldChange}
-        onBlur={() => validateField("phone_number")}
+        onBlur={handleBlur}
+        error={errors.phone_number}
+        touched={touchedFields.phone_number}
       />
       <FormField
         icon="/city.svg"
@@ -147,7 +200,9 @@ export default function Form(props) {
         placeholder="Miasto zamieszkania"
         value={formData.city}
         onChange={handleFieldChange}
-        onBlur={() => validateField("city")}
+        onBlur={handleBlur}
+        error={errors.city}
+        touched={touchedFields.city}
       />
       <div className="card-content">
         <label>
@@ -181,6 +236,14 @@ export default function Form(props) {
           disabled={isLoading}
         >
           {props.isEditing ? "Zatwierdź" : "Dodaj kontakt"}
+        </button>
+        <button
+          onClick={() => {
+            console.log(errors);
+            console.log(touchedFields);
+          }}
+        >
+          look who it is if its not the loggin madafaking button!
         </button>
       </div>
     </form>
