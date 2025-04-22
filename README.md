@@ -22,7 +22,7 @@ Aplikacja webowa do zarządzania kontaktami zintegrowana z API pogodowym. Umożl
 - npm 9+
 
 ## Instalacja
-1. Sklonuj repozytorium:
+1. Sklonuj repozytorium:\
 `git clone https://github.com/zxasc/contacts-fullstack-application.git`
 
 2. Backend:
@@ -56,5 +56,5 @@ cd frontend
 npm run dev
 ```
 
-3. Przeglądarka
+3. Przeglądarka\
 W przeglądarce otwórz adres: http://localhost:5173/ aby rozpocząć korzystanie z aplikacji.
