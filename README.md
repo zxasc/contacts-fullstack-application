@@ -25,6 +25,14 @@ Aplikacja webowa do zarządzania kontaktami zintegrowana z API pogodowym. Umożl
 1. Sklonuj repozytorium:\
 `git clone https://github.com/zxasc/contacts-fullstack-application.git`
 
+### Przy użyciu skryptu
+2. Zmień zezwolenia skryptu:\
+`chmod +x kontakty.sh`
+
+3. Uruchom skrypt:\
+`./kontakty.sh`
+
+### Manualnie
 2. Backend:
 ```bash
 cd backend
@@ -44,6 +52,11 @@ npm install
 
 ## Uruchamianie
 
+### Przy użyciu skryptu
+1. Uruchom skrypt:\
+`./kontakty.sh`
+
+### Manualnie
 1. Backend
 ```bash
 cd backend
